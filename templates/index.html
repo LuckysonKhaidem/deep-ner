@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Named Entity Recognition Test</title>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+	<script type="text/javascript" src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<style type="text/css">
+	#app {
+			position: relative;
+			display: block;
+			height: 600px;
+			width: 60%;
+			box-shadow: 2px 2px 4px 4px rgba(0,0,0,0.15);
+			margin: 0 auto;
+			margin-top: 5%;
+		}
+	#input_text {
+			position: absolute;
+			width: 100%;
+			bottom: 0;
+			margin-left:2%;
+	}
+	
+</style>
+<body>
+	<div id = "app">
+		<div>
+			<ul class = "list-group" id = "result">
+			</ul>
+		</div>
+		<div class = "form-group" id = "input_text">
+			<input type="text" name="message" id = "message" style = "display:inline;width:80%;" class = "form-control">
+			<button class = "btn btn-primary" id = "submit" style = "display: inline;">Send </button>
+		</div>
+			
+		</div>
+	
+	</div>
+
+</body>
+<script type="text/javascript">
+
+	function populateresult(result) {
+		$("#result").empty()
+		var html = ""
+		for (var i = 0; i < result.length; i++) {
+			html += `<li class='list-group-item'>${result[i][0]} : <b>${result[i][1]}</b></li>`
+		}
+		$("#result").append(html)
+	}
+
+	$(document).ready(function(){
+		$("#submit").click(function(){
+			$.ajax({
+				url: '/extract_entities',
+				type: 'GET',
+				dataType: 'json',
+				data: {sentence: $("#message").val()},
+			})
+			.done(function(data) {
+				populateresult(data["result"])
+			});
+			
+		})
+	})
+</script>
+</html>
